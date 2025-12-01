@@ -71,15 +71,15 @@ class LiveCodePhpmdRunner implements ToolInterface
 
         $options = new \PHPMD\TextUI\CommandLineOptions($commandLineArguments);
 
-        // PHPMD 2.10+ requires an OutputInterface in constructor
+        // PHPMD 2.10+ requires a PHPMD\Console\Output in constructor
         // Check constructor signature to support both old and new PHPMD versions
         $reflection = new \ReflectionClass(\PHPMD\TextUI\Command::class);
         $constructor = $reflection->getConstructor();
         
         if ($constructor && $constructor->getNumberOfRequiredParameters() > 0) {
-            // Newer PHPMD version - need to provide OutputInterface
-            // Use Symfony's NullOutput which implements all required methods
-            $output = new \Symfony\Component\Console\Output\NullOutput();
+            // Newer PHPMD version - need to provide PHPMD\Console\Output
+            // Create a PHPMD Console Output instance
+            $output = new \PHPMD\Console\Output();
             $command = new \PHPMD\TextUI\Command($output);
         } else {
             // Older PHPMD version - no constructor parameters
