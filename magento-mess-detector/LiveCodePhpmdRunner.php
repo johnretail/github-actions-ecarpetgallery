@@ -78,24 +78,8 @@ class LiveCodePhpmdRunner implements ToolInterface
         
         if ($constructor && $constructor->getNumberOfRequiredParameters() > 0) {
             // Newer PHPMD version - need to provide OutputInterface
-            // Create a simple output that writes to the report file
-            $output = new class($this->reportFile) implements \Symfony\Component\Console\Output\OutputInterface {
-                private $reportFile;
-                private $formatter;
-                public function __construct($reportFile) { $this->reportFile = $reportFile; }
-                public function write($messages, $newline = false, $options = 0): void {}
-                public function writeln($messages, $options = 0): void {}
-                public function setVerbosity(int $verbosity): void {}
-                public function getVerbosity(): int { return self::VERBOSITY_NORMAL; }
-                public function isQuiet(): bool { return false; }
-                public function isVerbose(): bool { return false; }
-                public function isVeryVerbose(): bool { return false; }
-                public function isDebug(): bool { return false; }
-                public function setDecorated(bool $decorated): void {}
-                public function isDecorated(): bool { return false; }
-                public function setFormatter(\Symfony\Component\Console\Formatter\OutputFormatterInterface $formatter): void { $this->formatter = $formatter; }
-                public function getFormatter(): \Symfony\Component\Console\Formatter\OutputFormatterInterface { return $this->formatter ?? new \Symfony\Component\Console\Formatter\OutputFormatter(); }
-            };
+            // Use Symfony's NullOutput which implements all required methods
+            $output = new \Symfony\Component\Console\Output\NullOutput();
             $command = new \PHPMD\TextUI\Command($output);
         } else {
             // Older PHPMD version - no constructor parameters
