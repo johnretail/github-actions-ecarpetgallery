@@ -82,7 +82,7 @@ class LiveCodePhpmdRunner implements ToolInterface
             $output = new class extends \PHPMD\Console\Output {
                 public function write(array|string $messages, bool $newline = false, int $options = self::VERBOSITY_NORMAL): void {}
                 public function writeError(array|string $messages, bool $newline = false, int $options = self::VERBOSITY_NORMAL): void {}
-                protected function doWrite(string $message, bool $newline): void {}
+                protected function doWrite(string $message): void {}
             };
             $command = new \PHPMD\TextUI\Command($output);
         } else {
