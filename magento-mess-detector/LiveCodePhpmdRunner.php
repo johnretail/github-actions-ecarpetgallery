@@ -78,8 +78,11 @@ class LiveCodePhpmdRunner implements ToolInterface
         
         if ($constructor && $constructor->getNumberOfRequiredParameters() > 0) {
             // Newer PHPMD version - need to provide PHPMD\Console\Output
-            // Create a PHPMD Console Output instance
-            $output = new \PHPMD\Console\Output();
+            // PHPMD\Console\Output is abstract, so create a concrete implementation
+            $output = new class extends \PHPMD\Console\Output {
+                public function write($message): void {}
+                public function writeError($message): void {}
+            };
             $command = new \PHPMD\TextUI\Command($output);
         } else {
             // Older PHPMD version - no constructor parameters
