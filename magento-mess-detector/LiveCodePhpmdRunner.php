@@ -85,7 +85,7 @@ class LiveCodePhpmdRunner implements ToolInterface
                 public function write($messages, $newline = false, $options = 0) {}
                 public function writeln($messages, $options = 0) {}
                 public function setVerbosity($verbosity) {}
-                public function getVerbosity() { return self::VERBOSITY_NORMAL; }
+                public function getVerbosity(): int { return self::VERBOSITY_NORMAL; }
                 public function isQuiet() { return false; }
                 public function isVerbose() { return false; }
                 public function isVeryVerbose() { return false; }
