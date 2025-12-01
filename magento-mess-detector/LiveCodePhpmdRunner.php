@@ -82,16 +82,16 @@ class LiveCodePhpmdRunner implements ToolInterface
             $output = new class($this->reportFile) implements \Symfony\Component\Console\Output\OutputInterface {
                 private $reportFile;
                 public function __construct($reportFile) { $this->reportFile = $reportFile; }
-                public function write($messages, $newline = false, $options = 0) {}
-                public function writeln($messages, $options = 0) {}
-                public function setVerbosity($verbosity) {}
+                public function write($messages, $newline = false, $options = 0): void {}
+                public function writeln($messages, $options = 0): void {}
+                public function setVerbosity(int $verbosity): void {}
                 public function getVerbosity(): int { return self::VERBOSITY_NORMAL; }
-                public function isQuiet() { return false; }
-                public function isVerbose() { return false; }
-                public function isVeryVerbose() { return false; }
-                public function isDebug() { return false; }
-                public function setDecorated($decorated) {}
-                public function isDecorated() { return false; }
+                public function isQuiet(): bool { return false; }
+                public function isVerbose(): bool { return false; }
+                public function isVeryVerbose(): bool { return false; }
+                public function isDebug(): bool { return false; }
+                public function setDecorated(bool $decorated): void {}
+                public function isDecorated(): bool { return false; }
             };
             $command = new \PHPMD\TextUI\Command($output);
         } else {
