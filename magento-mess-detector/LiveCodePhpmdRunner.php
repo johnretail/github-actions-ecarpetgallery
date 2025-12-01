@@ -80,8 +80,8 @@ class LiveCodePhpmdRunner implements ToolInterface
             // Newer PHPMD version - need to provide PHPMD\Console\Output
             // PHPMD\Console\Output is abstract, so create a concrete implementation
             $output = new class extends \PHPMD\Console\Output {
-                public function write($message): void {}
-                public function writeError($message): void {}
+                public function write(array|string $messages, bool $newline = false, int $options = self::VERBOSITY_NORMAL): void {}
+                public function writeError(array|string $messages, bool $newline = false, int $options = self::VERBOSITY_NORMAL): void {}
             };
             $command = new \PHPMD\TextUI\Command($output);
         } else {
