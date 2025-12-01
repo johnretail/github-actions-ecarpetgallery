@@ -1,2 +1,2 @@
-# github-actions-ecarpetgallery
-Ecarpetgallery CI Implementation Artifacts
+# github-actions-retailogists
+Code Audit Practice For Magento2

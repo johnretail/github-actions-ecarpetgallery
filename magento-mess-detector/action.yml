@@ -1,0 +1,13 @@
+name: 'Magento 2 Mess Detector'
+author: 'retailogists'
+description: 'performs php static code analysis with the Magento 2 Mess Detector ruleset'
+inputs:
+  files_changed:
+    description: 'Gets commited files list'
+    required: false
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+branding:
+  icon: 'code'  
+  color: 'green'
