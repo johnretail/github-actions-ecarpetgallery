@@ -71,7 +71,33 @@ class LiveCodePhpmdRunner implements ToolInterface
 
         $options = new \PHPMD\TextUI\CommandLineOptions($commandLineArguments);
 
-        $command = new \PHPMD\TextUI\Command();
+        // PHPMD 2.10+ requires an OutputInterface in constructor
+        // Check constructor signature to support both old and new PHPMD versions
+        $reflection = new \ReflectionClass(\PHPMD\TextUI\Command::class);
+        $constructor = $reflection->getConstructor();
+        
+        if ($constructor && $constructor->getNumberOfRequiredParameters() > 0) {
+            // Newer PHPMD version - need to provide OutputInterface
+            // Create a simple output that writes to the report file
+            $output = new class($this->reportFile) implements \Symfony\Component\Console\Output\OutputInterface {
+                private $reportFile;
+                public function __construct($reportFile) { $this->reportFile = $reportFile; }
+                public function write($messages, $newline = false, $options = 0) {}
+                public function writeln($messages, $options = 0) {}
+                public function setVerbosity($verbosity) {}
+                public function getVerbosity() { return self::VERBOSITY_NORMAL; }
+                public function isQuiet() { return false; }
+                public function isVerbose() { return false; }
+                public function isVeryVerbose() { return false; }
+                public function isDebug() { return false; }
+                public function setDecorated($decorated) {}
+                public function isDecorated() { return false; }
+            };
+            $command = new \PHPMD\TextUI\Command($output);
+        } else {
+            // Older PHPMD version - no constructor parameters
+            $command = new \PHPMD\TextUI\Command();
+        }
 
         return $command->run($options, new \PHPMD\RuleSetFactory());
     }
