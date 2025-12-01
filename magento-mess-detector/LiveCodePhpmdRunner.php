@@ -59,7 +59,7 @@ class LiveCodePhpmdRunner implements ToolInterface
         $commandLineArguments = [
             'run_file_mock', //emulate script name in console arguments
             $this->getSourceCodePath($whiteList),
-	    'ansi', //report format
+            'ansi', //report format
             $this->rulesetFile,
             '--reportfile',
             $this->reportFile,
@@ -67,7 +67,7 @@ class LiveCodePhpmdRunner implements ToolInterface
             'php',
             '--exclude',
             'vendor/,tmp/,var/,generated/,.git/,.idea/'
-	];
+        ];
 
         $options = new \PHPMD\TextUI\CommandLineOptions($commandLineArguments);
 
@@ -75,7 +75,7 @@ class LiveCodePhpmdRunner implements ToolInterface
         // Check constructor signature to support both old and new PHPMD versions
         $reflection = new \ReflectionClass(\PHPMD\TextUI\Command::class);
         $constructor = $reflection->getConstructor();
-        
+
         if ($constructor && $constructor->getNumberOfRequiredParameters() > 0) {
             // Newer PHPMD version - need to provide PHPMD\Console\Output
             // PHPMD\Console\Output is abstract, so create a concrete implementation
@@ -92,14 +92,15 @@ class LiveCodePhpmdRunner implements ToolInterface
 
         return $command->run($options, new \PHPMD\RuleSetFactory());
     }
+
     private function getSourceCodePath($whiteList)
     {
         if (!empty($whiteList)) {
-            $whiteList = array_map(function($gitHubWorkspace){
-                             return $_SERVER['GITHUB_WORKSPACE'] . '/' . $gitHubWorkspace;
-	    }, $whiteList);
+            $whiteList = array_map(function($gitHubWorkspace) {
+                return $_SERVER['GITHUB_WORKSPACE'] . '/' . $gitHubWorkspace;
+            }, $whiteList);
             return implode(',', $whiteList);
         }
-	return $_SERVER['GITHUB_WORKSPACE'] ?: '/app/code/RetaiLogists';
+        return $_SERVER['GITHUB_WORKSPACE'] ?: '/app/code/RetaiLogists';
     }
 }

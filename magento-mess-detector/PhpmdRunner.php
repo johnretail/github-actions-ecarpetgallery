@@ -50,15 +50,15 @@ class PhpmdRunner extends \PHPUnit\Framework\TestCase
 
         if (!$codeMessDetector->canRun()) {
             $this->markTestSkipped('PHP Mess Detector is not available.');
-	}
+        }
 
-	$filesChanged = $_SERVER['GITHUB_WORKSPACE'] . '/fileschanged.txt';
+        $filesChanged = $_SERVER['GITHUB_WORKSPACE'] . '/fileschanged.txt';
         $outputFileChanged = "";
         if (file_exists($filesChanged)) {
-	    $outputFileChanged = file_get_contents($filesChanged);
-            $outputFileChanged = explode(' ',$outputFileChanged);
-	}
-	echo "File Changed: " . print_r($outputFileChanged);
+            $outputFileChanged = file_get_contents($filesChanged);
+            $outputFileChanged = explode(' ', $outputFileChanged);
+        }
+        echo "File Changed: " . print_r($outputFileChanged);
 
         $result = $codeMessDetector->run($outputFileChanged);
 
@@ -68,18 +68,27 @@ class PhpmdRunner extends \PHPUnit\Framework\TestCase
         }
 
         // PHPMD returns 0 on success, non-zero on failure
-        // Use 0 directly as EXIT_SUCCESS constant may not be available in all PHPMD versions
-        $this->assertEquals(
-            0,
-            $result,
-            "PHP Code Mess has found error(s):" . PHP_EOL . $output
-        );
+        // Handle both enum (newer versions) and integer (older versions) return types
+        if ($result instanceof \PHPMD\TextUI\ExitCode) {
+            // Newer PHPMD versions return an ExitCode enum - compare against Success enum
+            $this->assertEquals(
+                \PHPMD\TextUI\ExitCode::Success,
+                $result,
+                "PHP Code Mess has found error(s):" . PHP_EOL . $output
+            );
+        } else {
+            // Older PHPMD versions return an integer
+            $this->assertEquals(
+                0,
+                $result,
+                "PHP Code Mess has found error(s):" . PHP_EOL . $output
+            );
+        }
 
         // delete empty reports
         if (file_exists($reportFile)) {
             unlink($reportFile);
         }
     }
-
 }
 
