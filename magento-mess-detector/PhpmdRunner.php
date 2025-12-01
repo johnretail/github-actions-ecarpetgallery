@@ -67,8 +67,10 @@ class PhpmdRunner extends \PHPUnit\Framework\TestCase
             $output = file_get_contents($reportFile);
         }
 
+        // PHPMD returns 0 on success, non-zero on failure
+        // Use 0 directly as EXIT_SUCCESS constant may not be available in all PHPMD versions
         $this->assertEquals(
-            Command::EXIT_SUCCESS,
+            0,
             $result,
             "PHP Code Mess has found error(s):" . PHP_EOL . $output
         );
